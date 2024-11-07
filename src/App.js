@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import SurveyList from './components/Survey/SurveyList';
+import SurveyForm from './components/Survey/SurveyForm';
+import SurveyResults from './components/Results/SurveyResults';
+import Navbar from './components/Navbar';
 
-function App() {
+const App = () => {
+  const [auth, setAuth] = useState(!!localStorage.getItem('token'));
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Navbar />
+      <Routes>
+        {!auth ? (
+          <>
+            <Route path="/login" element={<Login setAuth={setAuth} />} />
+            <Route path="/register" element={<Register />} />
+          </>
+        ) : (
+          <>
+            <Route path="/" element={<SurveyList />} />
+            <Route path="/survey/:id" element={<SurveyForm />} />
+            <Route path="/results/:id" element={<SurveyResults />} />
+          </>
+        )}
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
